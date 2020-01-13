@@ -3,7 +3,32 @@ import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
 
 export class Map extends React.Component {
+    constructor(props) {
+        super(props);
+    
+        const {lat, lng} = this.props.initialCenter;
+        this.state = {
+          currentLocation: {
+            lat: lat,
+            lng: lng
+          }
+        }
+      }
+
     componentDidMount() {
+        if (this.props.centerAroundCurrentLocation) {
+            if (navigator && navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition((pos) => {
+                    const coords = pos.coords;
+                    this.setState({
+                        currentLocation: {
+                            lat: coords.latitude,
+                            lng: coords.longitude
+                        }
+                    })
+                })
+            }
+        }
         this.loadMap();
       }
     
